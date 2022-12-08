@@ -1,0 +1,529 @@
+{% extends 'job/base.html' %}
+{% block content %}
+<!-- Titlebar
+================================================== -->
+
+<div class="single-page-header freelancer-header" data-background-image="images/single-freelancer.jpg">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="single-page-header-inner">
+					<div class="left-side">
+						<div class="header-image freelancer-avatar"><img src="{{ users.profile.image.url }}" alt=""></div>
+						<div class="header-details">
+							<h3>{{ users.first_name }} {{ users.last_name }} <span>{{ users.profile.tagline }}</span></h3>
+							<ul>
+								<li><div class="star-rating" data-rating="5.0"></div></li>
+								<li><div class="verified-badge-with-title">Verified</div></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Page Content
+================================================== -->
+<div class="container">
+	<div class="row">
+		
+		<!-- Content -->
+		<div class="col-xl-8 col-lg-8 content-right-offset">
+			
+			<!-- Page Content -->
+			<div class="single-page-section">
+				<h3 class="margin-bottom-25">About Me</h3>
+				<p> {{ users.profile.bio }}</p>
+			</div>
+
+			<!-- Boxed List -->
+			<div class="boxed-list margin-bottom-60">
+				<div class="boxed-list-headline">
+					<h3><i class="icon-material-outline-thumb-up"></i> Work History and Feedback</h3>
+				</div>
+				<ul class="boxed-list-ul">
+
+					{# To be continued from here #}
+					{% for review in reviews %}
+					
+					<li>
+						<div class="boxed-list-item">
+							
+							<!-- Content -->
+							<div class="item-content">
+								<h4>{{review.project.title}} <span>Rated as {{review.rating}}</span></h4>
+								<div class="item-details margin-top-10">
+									<div class="star-rating" data-rating="{{review.rating}}"></div>
+									<div class="detail-item"><i class="icon-material-outline-date-range"></i>{{review.created}}</div>
+								</div>
+								<div class="item-description">
+									<p>{{review.comment}} </p>
+								</div>
+							</div>
+							{% if review.employer == request.user %}
+							<div>
+								<a href="#small-dialog-1" id="employer-edit-review" class=" edit-reviews popup-with-zoom-anim button gray ripple-effect margin-top-5 margin-bottom-10 edit-review" data-rating="{{review.rating}}" \
+                                    data-comment="{{review.comment}}" data-onBudget="{{review.on_budget}}" data-timely="{{review.timely}}"\
+                                     data-freelancer="{{review.freelancer}}" data-employer="{{request.user.username}}"  data-subject="{{review.project.title}}" data-project="{{review.id}}" ><iclass="icon-feather-edit"></i> Edit Review</a>
+							</div>
+							{% endif %}
+							
+						</div>
+					</li>
+					{%empty%}
+					<p>No review yet</p>
+					
+					{% endfor %}
+				</ul>
+				<br/>
+				<div id="write-review">
+					<a href="#small-dialog-2" class="add-reviews popup-with-zoom-anim button ripple-effect margin-top-5 margin-bottom-10" id="freelancer-add-review"  data-freelancer="{{users.username}}" data-employer="{{request.user.username}}"><i    \
+						class="icon-material-outline-thumb-up"></i> Leave a Review</a>
+					
+				</div><br>
+				
+				
+				<!-- Pagination -->
+				{% include "pagination.html" with page=reviews %}
+				
+				<!-- Pagination / End -->
+
+			</div>
+			<!-- Boxed List / End -->
+			{# to add new review #}
+				
+
+
+		</div>
+		<!-- Sidebar -->
+		<div class="col-xl-4 col-lg-4">
+			<div class="sidebar-container">
+				
+				<!-- Profile Overview -->
+				<div class="profile-overview">
+					<div class="overview-item"><strong>53</strong><span>Jobs Done</span></div>
+					<div class="overview-item"><strong>22</strong><span>Rehired</span></div>
+				</div>
+
+				<!-- Button -->
+				<a href="#small-dialog" class="apply-now-button popup-with-zoom-anim margin-bottom-50">Make an Offer <i class="icon-material-outline-arrow-right-alt"></i></a>
+
+				<!-- Freelancer Indicators -->
+				<div class="sidebar-widget">
+					<div class="freelancer-indicators">
+
+						<!-- Indicator -->
+						<div class="indicator">
+							<strong>88%</strong>
+							<div class="indicator-bar" data-indicator-percentage="88"><span></span></div>
+							<span>Job Success</span>
+						</div>
+
+						<!-- Indicator -->
+						<div class="indicator">
+							<strong>100%</strong>
+							<div class="indicator-bar" data-indicator-percentage="100"><span></span></div>
+							<span>Recommendation</span>
+						</div>
+						
+						<!-- Indicator -->
+						<div class="indicator">
+							<strong>90%</strong>
+							<div class="indicator-bar" data-indicator-percentage="90"><span></span></div>
+							<span>On Time</span>
+						</div>	
+											
+						<!-- Indicator -->
+						<div class="indicator">
+							<strong>80%</strong>
+							<div class="indicator-bar" data-indicator-percentage="80"><span></span></div>
+							<span>On Budget</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Sidebar Widget -->
+				<div class="sidebar-widget">
+					<h3>Bookmark or Share</h3>
+
+					<!-- Bookmark Button -->
+					<!-- <button class="bookmark-button margin-bottom-25">
+						<span class="bookmark-icon"></span>
+						<span class="bookmark-text">Bookmark</span>
+						<span class="bookmarked-text">Bookmarked</span>
+					</button> -->
+					<form method="post">
+
+						{% csrf_token %}
+					
+						<div class="buttons has-addons">
+					
+						{% if users in user.profile.favourite.all %}
+					
+							
+					
+							<button class="button is-success margin-bottom-25" name="bookmark" value="bookmarked">
+								
+								Bookmarked!!
+					
+							</button>
+					
+						{% else %}
+					
+							<button class="button is-success margin-bottom-25" name="bookmark" value="bookmark">
+					
+								Bookmark
+					
+							</button>
+					
+							
+					
+						{% endif %}
+					
+						</div>
+					
+					</form>
+					<!-- Copy URL -->
+					<div class="copy-url">
+						<input id="copy-url" type="text" value="" class="with-border">
+						<button class="copy-url-button ripple-effect" data-clipboard-target="#copy-url" title="Copy to Clipboard" data-tippy-placement="top"><i class="icon-material-outline-file-copy"></i></button>
+					</div>
+
+					<!-- Share Buttons -->
+					<div class="share-buttons margin-top-25">
+						<div class="share-buttons-trigger"><i class="icon-feather-share-2"></i></div>
+						<div class="share-buttons-content">
+							<span>Interesting? <strong>Share It!</strong></span>
+							<ul class="share-buttons-icons">
+								<li><a href="#" data-button-color="#3b5998" title="Share on Facebook" data-tippy-placement="top"><i class="icon-brand-facebook-f"></i></a></li>
+								<li><a href="#" data-button-color="#1da1f2" title="Share on Twitter" data-tippy-placement="top"><i class="icon-brand-twitter"></i></a></li>
+								<li><a href="#" data-button-color="#dd4b39" title="Share on Google Plus" data-tippy-placement="top"><i class="icon-brand-google-plus-g"></i></a></li>
+								<li><a href="#" data-button-color="#0077b5" title="Share on LinkedIn" data-tippy-placement="top"><i class="icon-brand-linkedin-in"></i></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+<!-- Spacer -->
+<div class="margin-top-15"></div>
+<!-- Spacer / End-->
+
+ 
+			<!-- Row / End -->
+            <div id="small-dialog-1" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+
+                <!--Tabs -->
+                <div class="sign-in-form">
+            
+                    <ul class="popup-tabs-nav">
+                    </ul>
+            
+                    <div class="popup-tabs-container">
+            
+                        <!-- Tab -->
+                        <div class="popup-tab-content" id="tab1">
+                            
+                            <!-- Welcome Text -->
+                            <div class="welcome-text">
+                                <h3 >Change Review</h3>
+                                <span>Rate <a href="#" id="edit-employer-name">Herman Ewout</a> for the project <a href="#" id="edit-project-name">WordPress Theme Installation</a> </span>
+                            </div>
+                                
+                            <!-- Form -->
+                            <form method="post" action="#" id="change-review-form">
+            
+                                <div class="feedback-yes-no">
+                                    <strong id="edit-onBudget">Was this delivered on budget?</strong>
+                                    <div class="radio" >
+                                        <input id="radio-rating-1" name="radio" type="radio" checked>
+                                        <label for="radio-rating-1"><span class="radio-label"></span> Yes</label>
+                                    </div>
+            
+                                    <div class="radio">
+                                        <input id="radio-rating-2" name="radio" type="radio">
+                                        <label for="radio-rating-2"><span class="radio-label"></span> No</label>
+                                    </div>
+                                </div>
+            
+                                <div class="feedback-yes-no">
+                                    <strong>Was this delivered on time?</strong>
+                                    <div class="radio">
+                                        <input id="radio-rating-3" name="radio2" type="radio" checked>
+                                        <label for="radio-rating-3"><span class="radio-label"></span> Yes</label>
+                                    </div>
+            
+                                    <div class="radio">
+                                        <input id="radio-rating-4" name="radio2" type="radio">
+                                        <label for="radio-rating-4"><span class="radio-label"></span> No</label>
+                                    </div>
+                                </div>
+            
+                                <div class="feedback-yes-no">
+                                    <strong>Your Rating</strong>
+                                    <div class="leave-rating" id="edit-rating">
+                                        <input type="radio" name="rating1" id="rating-1" value="1" checked/>
+                                        <label for="rating-1" class="icon-material-outline-star"></label>
+                                        <input type="radio" name="rating1" id="rating-2" value="2"/>
+                                        <label for="rating-2" class="icon-material-outline-star"></label>
+                                        <input type="radio" name="rating1" id="rating-3" value="3"/>
+                                        <label for="rating-3" class="icon-material-outline-star"></label>
+                                        <input type="radio" name="rating1" id="rating-4" value="4"/>
+                                        <label for="rating-4" class="icon-material-outline-star"></label>
+                                        <input type="radio" name="rating1" id="rating-5" value="5"/>
+                                        <label for="rating-5" class="icon-material-outline-star"></label>
+                                    </div><div class="clearfix"></div>
+                                </div>
+            
+                                
+                                <textarea class="with-border" placeholder="Comment" name="message" id="message" cols="7" required>Excellent programmer - helped me fixing small issue.</textarea>
+                                {% csrf_token %}
+                                <button class="button full-width button-sliding-icon ripple-effect" id="save-review" type="submit" form="change-review-form">Save Changes <i class="icon-material-outline-arrow-right-alt"></i></button>
+                            </form>
+                            
+                            <!-- Button -->
+                           
+            
+                        </div>
+            
+                    </div>
+                </div>
+            </div>
+             
+            
+            <!-- Leave a Review for Freelancer Popup
+            ================================================== -->
+            <div id="small-dialog-2" class="zoom-anim-dialog mfp-hide dialog-with-tabs">
+            
+                <!--Tabs -->
+                <div class="sign-in-form">
+            
+                    <ul class="popup-tabs-nav">
+                    </ul>
+            
+                    <div class="popup-tabs-container">
+            
+                        <!-- Tab -->
+                        <div class="popup-tab-content" id="tab2">
+                            
+                            <!-- Welcome Text -->
+                            <div class="welcome-text">
+                                <h3>Leave a Review</h3>
+                                <span>Rate <a href="#">{{users.username}}</a> for the project: 
+									 
+										{% for job in jobs %}
+
+										<select name="select-project" id="select-jobs">
+										<a href="#">
+										<option value="{{job.id}}">{{job.title}}</option>
+										</a>
+										</select>
+										{%empty%}
+										<p style="color:red">This user haven't completed or posted any job</p>
+										{% endfor %}
+										
+								 </span>
+                            </div>
+                                
+                            <!-- Form -->
+                            <form method="post" action="#" id="leave-review-form">
+            
+                                <div class="feedback-yes-no">
+                                    <strong>Was this delivered on budget?</strong>
+                                    <div class="radio">
+                                        <input id="radio-1" name="radio" type="radio" required value="1">
+                                        <label for="radio-1"><span class="radio-label"></span> Yes</label>
+                                    </div>
+            
+                                    <div class="radio">
+                                        <input id="radio-2" name="radio" type="radio" required value="0">
+                                        <label for="radio-2"><span class="radio-label"></span> No</label>
+                                    </div>
+                                </div>
+            
+                                <div class="feedback-yes-no">
+                                    <strong>Was this delivered on time?</strong>
+                                    <div class="radio">
+                                        <input id="radio-3" name="radio2" type="radio" required value="1">
+                                        <label for="radio-3"><span class="radio-label"></span> Yes</label>
+                                    </div>
+            
+                                    <div class="radio">
+                                        <input id="radio-4" name="radio2" type="radio" required value="0">
+                                        <label for="radio-4"><span class="radio-label"></span> No</label>
+                                    </div>
+                                </div>
+            
+                                <div class="feedback-yes-no">
+                                    <strong>Your Rating</strong>
+                                    <div class="leave-rating">
+                                        <input type="radio" name="rating" id="rating-radio-1" value="1" required>
+                                        <label for="rating-radio-1" class="icon-material-outline-star"></label>
+                                        <input type="radio" name="rating" id="rating-radio-2" value="2" required>
+                                        <label for="rating-radio-2" class="icon-material-outline-star"></label>
+                                        <input type="radio" name="rating" id="rating-radio-3" value="3" required>
+                                        <label for="rating-radio-3" class="icon-material-outline-star"></label>
+                                        <input type="radio" name="rating" id="rating-radio-4" value="4" required>
+                                        <label for="rating-radio-4" class="icon-material-outline-star"></label>
+                                        <input type="radio" name="rating" id="rating-radio-5" value="5" required>
+                                        <label for="rating-radio-5" class="icon-material-outline-star"></label>
+                                    </div><div class="clearfix"></div>
+                                </div>
+            
+                                <textarea class="with-border" placeholder="Comment" name="message2" id="message2" cols="7" required></textarea>
+                                {% csrf_token %}
+                                <button  id="leave-review" class="button full-width button-sliding-icon ripple-effect" type="button" form="leave-review-form">Leave a Review <i class="icon-material-outline-arrow-right-alt"></i></button>
+                            </form>
+                            
+                            <!-- Button -->
+                            
+            
+                        </div>
+            
+                    </div>
+                </div>
+            </div>
+
+
+
+
+<script>
+                // submit a review 
+                
+                var editReviews = document.getElementsByClassName("edit-reviews");
+
+                // prefill the pop-up form with values
+                Array.prototype.forEach.call(editReviews,(element)=>{
+                    element.addEventListener("click", function(){
+                        employer = element.dataset.employer;
+                        freelancer = element.dataset.freelancer;
+                        review_id = element.dataset.project;
+                        subject = element.dataset.subject;
+                        rating = element.dataset.rating;
+                        onBudget = element.dataset.onBudget;
+                        timely = element.dataset.timely;
+                        comment = element.dataset.comment;
+                        isFreelancer = element.dataset.isFreelancer;
+                        // prefill
+                    if (document.querySelector("#small-dialog-1").style.display != "none"){
+                        
+                        if (isFreelancer){
+                            document.querySelector("#edit-employer-name").innerHTML = freelancer;
+                        }else{
+                            document.querySelector("#edit-employer-name").innerHTML = employer;
+                        }
+                        
+                        document.querySelector("#edit-project-name").innerHTML = subject;
+                        if (onBudget == "True"){
+                            document.querySelector("#radio-rating-1").checked = true;
+                        }else{
+                            document.querySelector("#radio-rating-2").checked = true;
+                        }
+                        if (timely == "True"){
+                            document.querySelector("#radio-rating-3").checked = true;
+                        }else{
+                            document.querySelector("#radio-rating-4").checked = true;
+                        }
+
+                        document.querySelector(`#rating-radio-${rating}`).checked = true;
+                        
+                        document.querySelector("#message").innerHTML= comment;
+
+                    }
+
+                    // submit the form
+                    document.getElementById("save-review").addEventListener("click", function(){
+                        onBudget = document.querySelector('input[name="radio"]:checked').value;
+                        timely = document.querySelector('input[name="radio2"]:checked').value;
+                        rating = document.querySelector('input[name="rating1"]:checked').value;
+                        comment = document.querySelector("#message").value;
+                        var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                          fetch("{% url 'add_review' %}", {
+
+                            method: "PUT",
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            },
+                            body: JSON.stringify({
+                                rating: rating,
+                                timely: timely,
+                                on_budget: onBudget,
+                                comment:comment,
+                                reveiw_id: review_id
+                            })
+                        })
+                        .then((response)=>{
+                            return response.json();
+                        })
+                        .then((result)=>{
+                            alert(result.message);
+                            window.location.reload();
+
+                        })
+                        .then((err)=>{
+                            console.error(err);
+                        })
+                        })
+                    
+                    })
+                })
+       
+
+                
+                // submit a new review 
+                var addReviews = document.getElementsByClassName("add-reviews");
+
+                Array.prototype.forEach.call(addReviews, (element)=>{
+                    element.addEventListener("click", function(){
+                        var project_id = document.querySelector("#select-jobs").value;
+                        var freelancer = element.dataset.freelancer;
+                        var employer = element.dataset.employer;
+
+                        // submit form 
+                        document.getElementById("leave-review").addEventListener("click", function(){
+                            onBudget = document.querySelector('input[name="radio"]:checked').value;
+                            timely = document.querySelector('input[name="radio2"]:checked').value;
+                            rating = document.querySelector('input[name="rating"]:checked').value;
+                            comment = document.querySelector("#message2").value;
+                            var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                            fetch("{% url 'add_review' %}", {
+                            method: "POST",
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            },
+                            body: JSON.stringify({
+                                rating: rating,
+                                timely: timely,
+                                on_budget: onBudget,
+                                comment:comment,
+                                freelancer:freelancer,
+                                employer: employer,
+                                project: project_id
+                            })
+                        })
+                        .then((response)=>{
+                            return response.json();
+                        })
+                        .then((result)=>{
+                            alert(result.message);
+                            window.location.reload();
+
+                        })
+                        .then((err)=>{
+                            console.error(err);
+                        })
+
+                        })
+                        })
+                    })
+
+     
+            </script>
+{% endblock content %}
